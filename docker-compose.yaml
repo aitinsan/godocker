@@ -1,0 +1,25 @@
+version: "3"
+services:
+  snippetbox:
+    build: .
+    restart: always
+    environment:
+      - WAIT_HOSTS=pgdb:5435
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+    ports:
+      - 4000:4000
+    links:
+      - pgdb
+    depends_on:
+      - pgdb
+  pgdb:
+    image: postgres:latest
+    ports:
+      - 5435:5432
+    volumes:
+      - ./pgdb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
